@@ -1,0 +1,1632 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arslan-MD | Pro WhatsApp Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #00E676;
+            --primary-dark: #00C853;
+            --primary-gradient: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+            --dark: #0A0E17;
+            --darker: #070A10;
+            --light: #FFFFFF;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --text-tertiary: #64748B;
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 40% 20%, rgba(0, 230, 118, 0.15) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(0, 200, 83, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(10, 14, 23, 0.8) 0px, transparent 50%);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 230, 118, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 200, 83, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Top Navigation Bar with Profile */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+            animation: rotate 20s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .domain-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .domain-text .main {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, #FFFFFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .domain-text .sub {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .top-nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .menu-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgba(10, 14, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--card-border);
+            z-index: 999;
+            transition: var(--transition);
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .sidebar-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: var(--primary-gradient);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 998;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .music-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .music-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .music-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .music-btn.play {
+            background: var(--primary-gradient);
+            color: var(--dark);
+            width: 40px;
+            height: 40px;
+        }
+
+        .music-btn.play:hover {
+            transform: scale(1.1);
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .main-content.sidebar-active {
+            margin-left: 300px;
+        }
+
+        .hero-section {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        /* App Card */
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Dashboard Tabs */
+        .dashboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-gradient);
+            color: var(--dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .input-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .input-container:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.2);
+        }
+
+        .input-container i {
+            padding: 0 1rem;
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
+        }
+
+        .input-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem 0;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-container input:focus {
+            outline: none;
+        }
+
+        .input-hint {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            padding: 1.5rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 230, 118, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Results Section */
+        .results-container {
+            margin-top: 2.5rem;
+            display: none;
+        }
+
+        .results-container.active {
+            display: block;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        .status-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .status-success .status-icon {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--primary);
+        }
+
+        .status-error .status-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .status-info .status-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .status-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .status-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Code Display */
+        .code-display-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .code-display {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            margin: 1rem 0;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .code-label {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* QR Container */
+        .qr-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .qr-image {
+            width: 220px;
+            height: 220px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background: white;
+            padding: 1rem;
+        }
+
+        .qr-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-instructions {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Loader */
+        .loader-container {
+            display: none;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .hero-text h2 {
+                font-size: 2.8rem;
+            }
+            
+            .main-content.sidebar-active {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 0.8rem 1rem;
+            }
+            
+            .domain-text .main {
+                font-size: 1.5rem;
+            }
+            
+            .hero-section {
+                padding: 1rem;
+            }
+            
+            .hero-text h2 {
+                font-size: 2.2rem;
+            }
+            
+            .app-card {
+                padding: 2rem;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .music-player {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+        }
+
+        /* Support Page */
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .support-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .support-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .support-card h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .support-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .support-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .support-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Utility Classes */
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .glow {
+            filter: drop-shadow(0 0 20px rgba(0, 230, 118, 0.5));
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation with Profile -->
+    <nav class="top-nav">
+        <div class="profile-section">
+            <div class="profile-image">
+                <img src="https://files.catbox.moe/16i1l7.jpg" alt="Arslan-MD">
+            </div>
+            <div class="domain-text">
+                <div class="main">ArslanMD Official 🇵🇰</div>
+                <div class="sub">Professional WhatsApp Developer</div>
+            </div>
+        </div>
+        
+        <div class="top-nav-controls">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar Menu -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Arslan-MD</h3>
+            <p>Select an option</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active" data-tab="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link" data-tab="pair">
+                <i class="fas fa-key"></i>
+                <span>Pair System</span>
+            </a>
+            <a href="#" class="sidebar-link" data-tab="qr">
+                <i class="fas fa-qrcode"></i>
+                <span>QR Generator</span>
+            </a>
+            <a href="#" class="sidebar-link" data-tab="support">
+                <i class="fas fa-headset"></i>
+                <span>Support</span>
+            </a>
+            <a href="https://github.com/Arslan-MD/Arslan-XMD" class="sidebar-link" target="_blank">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+            </a>
+            <a href="https://youtube.com/@arslanmdofficial" class="sidebar-link" target="_blank">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+            <a href="https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306" class="sidebar-link" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp Channel</span>
+            </a>
+            <a href="https://chat.whatsapp.com/KRyARlvcUjoIv1CPSSyQA5" class="sidebar-link" target="_blank">
+                <i class="fas fa-users"></i>
+                <span>WhatsApp Group</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h2>Professional WhatsApp Management</h2>
+                        <p>Generate, manage, and deploy WhatsApp sessions at scale with Developer security and reliability.</p>
+                        
+                        <div class="stats-container">
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">SECURE</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">UPTIME</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Developer</div>
+                                <div class="stat-label">ArslanMD Official</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card animate-float">
+                        <div class="card-header">
+                            <h3>Session Generator</h3>
+                            <p>Generate pairing codes or QR for WhatsApp Web</p>
+                        </div>
+                        
+                        <div class="dashboard-tabs">
+                            <button class="tab-btn active" data-content="pairTab">
+                                <i class="fas fa-key"></i> Pair System
+                            </button>
+                            <button class="tab-btn" data-content="qrTab">
+                                <i class="fas fa-qrcode"></i> QR Generator
+                            </button>
+                        </div>
+                        
+                        <!-- Pair Tab Content -->
+                        <div class="tab-content active" id="pairTab">
+                            <div class="input-group">
+                                <label class="input-label">WhatsApp Number</label>
+                                <div class="input-container">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="text" id="pairNumber" placeholder="" value="">
+                                </div>
+                                <div class="input-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    Enter number with country code (e.g., 923237045919)
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="action-btn btn-primary" onclick="pair()">
+                                    <i class="fas fa-key"></i>
+                                    Generate Pairing Code
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- QR Tab Content -->
+                        <div class="tab-content" id="qrTab">
+                            <div class="input-group">
+                                <label class="input-label">WhatsApp Number</label>
+                                <div class="input-container">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="text" id="qrNumber" placeholder="" value="">
+                                </div>
+                                <div class="input-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    Enter number with country code (e.g., 923237045919)
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="action-btn btn-secondary" onclick="qr()">
+                                    <i class="fas fa-qrcode"></i>
+                                    Generate QR Code
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="loader-container" id="loader">
+                            <div class="loader"></div>
+                        </div>
+                        
+                        <div id="resultContainer" class="results-container">
+                            <div id="status" class="status-card status-info">
+                                <div class="status-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="status-content">
+                                    <h4>Ready to Generate</h4>
+                                    <p>Enter your number and select an option</p>
+                                </div>
+                            </div>
+                            
+                            <div id="codeDisplay" class="code-display-container" style="display: none;">
+                                <div class="code-label">Pairing Code</div>
+                                <div class="code-display" id="code"></div>
+                                <div class="input-hint">
+                                    <i class="fas fa-clock"></i>
+                                    This code expires in 20 seconds
+                                </div>
+                            </div>
+                            
+                            <div id="qrBox" class="qr-container" style="display: none;">
+                                <div class="code-label">QR Code</div>
+                                <div class="qr-image">
+                                    <img id="qrImage" src="" alt="QR Code">
+                                </div>
+                                <div class="qr-instructions">
+                                    <p><i class="fas fa-mobile-alt"></i> Open WhatsApp on your phone</p>
+                                    <p><i class="fas fa-qrcode"></i> Tap Menu → Linked Devices → Link a Device</p>
+                                    <p><i class="fas fa-camera"></i> Scan this QR code</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pair System Tab -->
+        <div class="tab-content" id="pair">
+            <div class="hero-section">
+                <div class="app-card" style="max-width: 800px; margin: 0 auto;">
+                    <div class="card-header">
+                        <h3>Pair System</h3>
+                        <p>Generate pairing codes for WhatsApp Web</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">WhatsApp Number</label>
+                        <div class="input-container">
+                            <i class="fas fa-phone"></i>
+                            <input type="text" id="pairSystemNumber" placeholder="" value="">
+                        </div>
+                        <div class="input-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Enter number with country code (e.g., 923237045919)
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary" onclick="pair()">
+                            <i class="fas fa-key"></i>
+                            Generate Pairing Code
+                        </button>
+                    </div>
+                    
+                    <div class="loader-container" id="pairLoader">
+                        <div class="loader"></div>
+                    </div>
+                    
+                    <div id="pairResultContainer" class="results-container">
+                        <div class="status-card status-info">
+                            <div class="status-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="status-content">
+                                <h4>Ready to Generate</h4>
+                                <p>Enter your number and click generate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Generator Tab -->
+        <div class="tab-content" id="qr">
+            <div class="hero-section">
+                <div class="app-card" style="max-width: 800px; margin: 0 auto;">
+                    <div class="card-header">
+                        <h3>QR Code Generator</h3>
+                        <p>Generate QR codes for WhatsApp Web pairing</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">WhatsApp Number</label>
+                        <div class="input-container">
+                            <i class="fas fa-phone"></i>
+                            <input type="text" id="qrSystemNumber" placeholder="" value="">
+                        </div>
+                        <div class="input-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Enter number with country code (e.g., 923237045919)
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn btn-secondary" onclick="qr()">
+                            <i class="fas fa-qrcode"></i>
+                            Generate QR Code
+                        </button>
+                    </div>
+                    
+                    <div class="loader-container" id="qrLoader">
+                        <div class="loader"></div>
+                    </div>
+                    
+                    <div id="qrResultContainer" class="results-container">
+                        <div class="status-card status-info">
+                            <div class="status-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="status-content">
+                                <h4>Ready to Generate</h4>
+                                <p>Enter your number and click generate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Tab -->
+        <div class="tab-content" id="support">
+            <div class="hero-section">
+                <div class="app-card" style="max-width: 1000px; margin: 0 auto;">
+                    <div class="card-header">
+                        <h3>Support & Contact</h3>
+                        <p>Get help and connect with the developer</p>
+                    </div>
+                    
+                    <div class="support-grid">
+                        <div class="support-card">
+                            <h4><i class="fas fa-user"></i> Developer Info</h4>
+                            <p><strong>Name:</strong> Arslan-MD</p>
+                            <p><strong>Phone:</strong> +92 323 7045919</p>
+                            <p><strong>Domain:</strong> arslan-md.is-best.net</p>
+                            <a href="tel:+923237045919" class="support-link">
+                                <i class="fas fa-phone"></i> Call Now
+                            </a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <h4><i class="fab fa-github"></i> GitHub</h4>
+                            <p>Explore open-source projects, report issues, and contribute to the development.</p>
+                            <a href="https://github.com/Arslan-MD/ArslanXMD" class="support-link" target="_blank">
+                                <i class="fab fa-github"></i> Visit Repository
+                            </a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <h4><i class="fab fa-youtube"></i> YouTube</h4>
+                            <p>Watch tutorials, updates, and demo videos on our YouTube channel.</p>
+                            <a href="https://youtube.com/@arslanmdofficial" class="support-link" target="_blank">
+                                <i class="fab fa-youtube"></i> Subscribe Channel
+                            </a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <h4><i class="fab fa-whatsapp"></i> WhatsApp</h4>
+                            <p>Join our WhatsApp community for updates and discussions.</p>
+                            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                                <a href="https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306" class="support-link" target="_blank">
+                                    <i class="fas fa-broadcast-tower"></i> Join Channel
+                                </a>
+                                <a href="https://chat.whatsapp.com/KRyARlvcUjoIv1CPSSyQA5" class="support-link" target="_blank">
+                                    <i class="fas fa-users"></i> Join Group
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="support-card">
+                            <h4><i class="fas fa-question-circle"></i> FAQ</h4>
+                            <p><strong>Q: Is this service free?</strong><br>A: Yes, completely free for personal use.</p>
+                            <p><strong>Q: Are my sessions secure?</strong><br>A: Yes, we don't store any data.</p>
+                            <p><strong>Q: How to get help?</strong><br>A: Contact via WhatsApp or GitHub.</p>
+                        </div>
+                        
+                        <div class="support-card">
+                            <h4><i class="fas fa-code"></i> API Documentation</h4>
+                            <p>For developers who want to integrate our service into their applications.</p>
+                            <a href="#" class="support-link">
+                                <i class="fas fa-book"></i> View API Docs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <div class="music-info">
+            <i class="fas fa-music" style="color: var(--primary);"></i>
+            <span>Arslan-MD 👻</span>
+        </div>
+        <div class="music-controls">
+            <button class="music-btn" id="prevBtn">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="music-btn play" id="playBtn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="music-btn" id="nextBtn">
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+        </div>
+    </div>
+
+    <script>
+        const BASE = "https://mega-session-site.onrender.com";
+        
+        // DOM Elements
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const audio = new Audio('https://files.catbox.moe/v4a72t.mp3');
+        let isPlaying = false;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeMusicPlayer();
+            showStatus('Ready to generate session. Enter your WhatsApp number and choose an option.', 'info');
+            
+            // Set default tab based on URL or localStorage
+            const defaultTab = localStorage.getItem('activeTab') || 'dashboard';
+            switchTab(defaultTab);
+        });
+        
+        // Sidebar Toggle
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('sidebar-active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('sidebar-active');
+            }
+        });
+        
+        // Sidebar Navigation
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.hasAttribute('data-tab')) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active state
+                    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Switch tab
+                    switchTab(tabId);
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        mainContent.classList.remove('sidebar-active');
+                    }
+                }
+            });
+        });
+        
+        // Tab Switching Function
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                localStorage.setItem('activeTab', tabId);
+            }
+        }
+        
+        // Initialize Dashboard Tabs
+        function initializeTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const contentId = this.getAttribute('data-content');
+                    
+                    // Update active state
+                    this.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Hide all content
+                    this.closest('.app-card').querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected content
+                    document.getElementById(contentId).classList.add('active');
+                });
+            });
+        }
+        
+        // Music Player
+        function initializeMusicPlayer() {
+            const playBtn = document.getElementById('playBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            
+            // Set initial volume
+            audio.volume = volumeSlider.value / 100;
+            
+            // Play/Pause functionality
+            playBtn.addEventListener('click', function() {
+                if (isPlaying) {
+                    audio.pause();
+                    this.innerHTML = '<i class="fas fa-play"></i>';
+                } else {
+                    audio.play().catch(e => console.log('Auto-play prevented:', e));
+                    this.innerHTML = '<i class="fas fa-pause"></i>';
+                }
+                isPlaying = !isPlaying;
+            });
+            
+            // Volume control
+            volumeSlider.addEventListener('input', function() {
+                audio.volume = this.value / 100;
+            });
+            
+            // Next/Previous buttons (for future multi-track support)
+            document.getElementById('prevBtn').addEventListener('click', function() {
+                audio.currentTime = Math.max(0, audio.currentTime - 10);
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+            });
+            
+            // Update play button when audio ends
+            audio.addEventListener('ended', function() {
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+        }
+        
+        // Show/hide loader
+        function showLoader(show, type = 'main') {
+            const loaderId = type === 'pair' ? 'pairLoader' : type === 'qr' ? 'qrLoader' : 'loader';
+            const loader = document.getElementById(loaderId);
+            if (loader) loader.style.display = show ? 'flex' : 'none';
+        }
+        
+        // Clear previous results
+        function clearUI(type = 'main') {
+            const containerId = type === 'pair' ? 'pairResultContainer' : 
+                              type === 'qr' ? 'qrResultContainer' : 'resultContainer';
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.classList.remove('active');
+                container.querySelectorAll('.code-display-container, .qr-container').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+            
+            // Also clear in dashboard
+            if (type !== 'main') {
+                const mainContainer = document.getElementById('resultContainer');
+                if (mainContainer) {
+                    mainContainer.classList.remove('active');
+                    mainContainer.querySelectorAll('.code-display-container, .qr-container').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                }
+            }
+        }
+        
+        // Show status message
+        function showStatus(message, type = 'info', target = 'main') {
+            const containerId = target === 'pair' ? 'pairResultContainer' : 
+                              target === 'qr' ? 'qrResultContainer' : 'resultContainer';
+            const container = document.getElementById(containerId);
+            
+            if (!container) return;
+            
+            // Create or update status card
+            let statusCard = container.querySelector('.status-card');
+            if (!statusCard) {
+                statusCard = document.createElement('div');
+                statusCard.className = `status-card status-${type}`;
+                statusCard.innerHTML = `
+                    <div class="status-icon">
+                        <i class="fas fa-${getIconForType(type)}"></i>
+                    </div>
+                    <div class="status-content">
+                        <h4>${type.charAt(0).toUpperCase() + type.slice(1)}</h4>
+                        <p>${message}</p>
+                    </div>
+                `;
+                container.innerHTML = '';
+                container.appendChild(statusCard);
+            } else {
+                statusCard.className = `status-card status-${type}`;
+                const icon = statusCard.querySelector('.status-icon i');
+                const title = statusCard.querySelector('h4');
+                const text = statusCard.querySelector('p');
+                
+                icon.className = `fas fa-${getIconForType(type)}`;
+                title.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                text.textContent = message;
+            }
+            
+            container.classList.add('active');
+            
+            // Also update main dashboard if needed
+            if (target !== 'main') {
+                showStatus(message, type, 'main');
+            }
+        }
+        
+        // Get appropriate icon for status type
+        function getIconForType(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'info': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // Pair with code function
+        async function pair() {
+            // Determine which input to use based on active tab
+            let num;
+            let target = 'main';
+            
+            if (document.getElementById('pair').classList.contains('active')) {
+                num = document.getElementById('pairSystemNumber').value.trim();
+                target = 'pair';
+            } else if (document.getElementById('qr').classList.contains('active')) {
+                num = document.getElementById('qrSystemNumber').value.trim();
+                target = 'pair';
+            } else {
+                num = document.getElementById('pairNumber').value.trim();
+            }
+            
+            if (!num) {
+                showStatus('Please enter a valid WhatsApp number with country code', 'error', target);
+                return;
+            }
+            
+            if (!num.match(/^\d{10,15}$/)) {
+                showStatus('Please enter a valid phone number (10-15 digits)', 'error', target);
+                return;
+            }
+            
+            showLoader(true, target);
+            showStatus('Generating secure pairing code...', 'info', target);
+            
+            try {
+                const res = await fetch(`${BASE}/pair?number=${encodeURIComponent(num)}`);
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    showStatus('Pairing code generated successfully! Use it within 20 seconds.', 'success', target);
+                    
+                    // Update code display in all relevant containers
+                    const codeContainers = [];
+                    if (target === 'pair' || target === 'main') {
+                        codeContainers.push(document.getElementById('codeDisplay'));
+                        const pairCodeDisplay = document.querySelector('#pairResultContainer .code-display-container');
+                        if (pairCodeDisplay) codeContainers.push(pairCodeDisplay);
+                    }
+                    
+                    codeContainers.forEach(container => {
+                        if (container) {
+                            const codeEl = container.querySelector('#code') || container.querySelector('.code-display');
+                            if (codeEl) {
+                                codeEl.textContent = data.code;
+                                container.style.display = 'block';
+                            }
+                        }
+                    });
+                    
+                    // Auto-copy to clipboard
+                    try {
+                        await navigator.clipboard.writeText(data.code);
+                        showStatus('Pairing code generated and copied to clipboard!', 'success', target);
+                    } catch (e) {
+                        // Clipboard failed, but that's okay
+                    }
+                } else {
+                    showStatus(data.code || data.error || 'Failed to generate pairing code', 'error', target);
+                }
+            } catch (error) {
+                showStatus('Network error. Please check your connection and try again.', 'error', target);
+            } finally {
+                showLoader(false, target);
+            }
+        }
+        
+        // QR code function
+        async function qr() {
+            // Determine which input to use based on active tab
+            let num;
+            let target = 'main';
+            
+            if (document.getElementById('pair').classList.contains('active')) {
+                num = document.getElementById('pairSystemNumber').value.trim();
+                target = 'qr';
+            } else if (document.getElementById('qr').classList.contains('active')) {
+                num = document.getElementById('qrSystemNumber').value.trim();
+                target = 'qr';
+            } else {
+                num = document.getElementById('qrNumber').value.trim();
+            }
+            
+            if (!num) {
+                showStatus('Please enter a valid WhatsApp number with country code', 'error', target);
+                return;
+            }
+            
+            if (!num.match(/^\d{10,15}$/)) {
+                showStatus('Please enter a valid phone number (10-15 digits)', 'error', target);
+                return;
+            }
+            
+            showLoader(true, target);
+            showStatus('Generating secure QR code...', 'info', target);
+            
+            try {
+                const timestamp = Date.now();
+                const qrUrl = `${BASE}/qr?number=${encodeURIComponent(num)}&t=${timestamp}`;
+                
+                // Update QR image in all relevant containers
+                const qrContainers = [];
+                if (target === 'qr' || target === 'main') {
+                    qrContainers.push(document.getElementById('qrBox'));
+                    const qrResultBox = document.querySelector('#qrResultContainer .qr-container');
+                    if (qrResultBox) qrContainers.push(qrResultBox);
+                }
+                
+                qrContainers.forEach(container => {
+                    if (container) {
+                        const img = container.querySelector('#qrImage') || container.querySelector('img');
+                        if (img) {
+                            img.src = qrUrl;
+                            img.onload = () => {
+                                showStatus('QR code generated successfully! Scan it with WhatsApp.', 'success', target);
+                                container.style.display = 'flex';
+                                showLoader(false, target);
+                            };
+                            
+                            img.onerror = () => {
+                                showStatus('Failed to generate QR code. Please try again.', 'error', target);
+                                showLoader(false, target);
+                            };
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                showStatus('Network error. Please check your connection and try again.', 'error', target);
+                showLoader(false, target);
+            }
+        }
+    </script>
+</body>
+</html>
